@@ -1,0 +1,38 @@
+<div class="container">
+    <div>
+        <h3>Playlist</h3>
+        <ul>
+            <li ng-repeat="item in home.playList" track by $index>
+                <a href="javascript:void(0);" ng-click="home.onPlaylistClick(item)" key-navigation tag="home" tabindex="0"
+                left="{{$index != 0 && 'prev'}}" right="next" id="playlist{{$index}}" default="{{$index==0?true:''}}"
+                   up="{{($index - 3) >= 0 && ('home:playlist' + ($index - 3)) }}"
+                   down="{{($index + 3) < home.playList.length && ('home:playlist' + ($index + 3)) ||
+                   ('home:playlist' + (home.playList.length -1))}}">
+                    <img src="src/images/Spotlight.png"
+                        ng-src="{{item.imageURL}}"
+                         onerror="this.src='src/images/Spotlight.png'">
+                </a>
+                <span>{{item.name}}</span>
+                <span>{{home.getFormatedDate(item.created)}}</span>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <h3>All videos</h3>
+        <ul class="all-videos">
+            <li ng-repeat="videos in home.videoList" track by $index>
+                <a href="javascript:void(0);" ng-click="home.onVideoClick(item,$index)" key-navigation tag="home"
+                left="prev" right="{{$index < home.videoList.length && 'next'}}" id="videolist{{$index}}"
+                   up="{{($index - 4) >= 0 && ('home:videolist' + ($index - 4)) }}"
+                   down="{{($index + 4) < home.videoList.length && ('home:videolist' + ($index + 4)) ||
+                            ('home:videolist' + (home.videoList.length -1))}}">
+                    <img src="src/images/Spotlight.png"
+                         ng-src="{{videos.imageURL}}"
+                         onerror="this.src='src/images/Spotlight.png'">
+                </a>
+                <span>{{videos.videoName}}</span>
+                <span>{{home.getFormatedDate(videos.created)}}</span>
+            </li>
+        </ul>
+    </div>
+</div>
