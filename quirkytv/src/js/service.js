@@ -116,17 +116,11 @@ angular.module('quirky')
                     break;
                 case tvKey.KEY_VIDEO_PLAY:
                     console.log("Play button clicked");
-                    videoHelper.callTo.play('',true);
-                    if(controllerScope && controllerScope.videoPlayer){
-                        controllerScope.videoPlayer.navigation('play');
-                    }
+                    mainVideo.playVideo();
                     break;
                 case tvKey.KEY_VIDEO_PAUSE:
                     console.log("Pause button clicked");
-                    videoHelper.callTo.pause('',true);
-                    if(controllerScope && controllerScope.videoPlayer){
-                        controllerScope.videoPlayer.navigation('pause');
-                    }
+                    mainVideo.pauseVideo();
                     break;
                 case tvKey.KEY_VIDEO_STOP:
                     console.log("Stop button clicked");
@@ -136,16 +130,12 @@ angular.module('quirky')
                     break;
                 case tvKey.KEY_VIDEO_FASTFORWARD:
                     console.log("FF button clicked");
-                    if(controllerScope && controllerScope.videoPlayer){
-                        controllerScope.videoPlayer.onClick('farward',true);
-                    }
+                    mainVideo.jumpForwardVideo(5000);
                     //  videoHelper.mediaFastForward();
                     break;
                 case tvKey.KEY_VIDEO_REWIND:
                     console.log("RW button clicked");
-                    if(controllerScope.videoPlayer){
-                        controllerScope.videoPlayer.onClick('backward',true);
-                    }
+                    mainVideo.jumpBackwardVideo(5000);
                     // videoHelper.mediaRewind();
                     break;
                 case tvKey.KEY_VIDEO_TRACK_PREVIOUS:

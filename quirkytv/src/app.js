@@ -1,6 +1,7 @@
+
 angular.module('quirky', ['ui.router', 'angularModalService'])
     .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
-    	var Base = "appLauncher/app/QuirkyTV/"
+    	var Base = "appLauncher/app/quirkytv/";
     		//Base= "";
         $stateProvider
             .state('home', {
@@ -10,14 +11,18 @@ angular.module('quirky', ['ui.router', 'angularModalService'])
             })
             .state('video', {
                 url: '/video',
-                templateUrl: 'src/views/video.html',
-                controller: 'videoController as video'
+                templateUrl: Base + 'src/views/video.html',
+                controller: 'videoController as video',
+                params: {
+                    data: [],
+                    index: -1
+                }
             });
         $urlRouterProvider.otherwise('/');
     }]);
 
 angular.module('quirky')
-    .controller('homeController', ['$scope', '$http', function ($scope, $http) {
+    .controller('homeController', ['$scope', '$http','$state', function ($scope, $http, $state) {
 
         var home = this,api = "http://stage.quirkytv.net/api/demo@quirkytv.net",currentPlaylist=[];
         console.log("api", api);
@@ -204,7 +209,10 @@ angular.module('quirky')
 
         var playUrl = function (playlist,index) {
             if(index>=0 && index<playlist.length) {
-                //player.init();
+                $state.go('video',{
+                    data : playlist,
+                    index : index
+                });
             } else if(index == playlist.length) {
                 playUrl(playlist,0);
             } else {
@@ -246,4 +254,129 @@ angular.module('quirky')
             playUrl(home.videoList,index);
         };
 
+    }])
+
+    .controller('videoController',['$scope','$stateParams', function ($scope,$stateParams) {
+        var video = this;
+        var playlist = $stateParams.data;
+        var index = $stateParams.index;
+        if(playlist && index) {
+            mainVideo.init(playlist[index].videoURL,0);
+        }
+        videoPlayer.CallbackforVideoControllerHelper=function(data,isBuffering,value){
+            switch(data){
+                case "error" :
+                    videoPlayer.isBuffering=false;
+                    videoPlayer.isLoading=false;
+                    videoPlayer.isError=true;
+                    videoPlayer.error=value;
+                    break;
+                case "showController" :
+                    videoPlayer.fullScreenHideControlsForce=false;
+                    videoPlayer.fullScreenShowControls=true;
+                    videoPlayer.fullScreenHideControls=false;
+                    break;
+                case "hideController" :
+                    $timeout(function () {
+                        videoPlayer.fullScreenHideControlsForce=true;
+                    },1000);
+                    videoPlayer.fullScreenShowControls=false;
+                    videoPlayer.fullScreenHideControls=true;
+                    try{$scope.$apply()}catch(e){}
+                    break;
+                case "mediaPlay" :
+                    videoPlayer.playPause = "pause-icon";
+                    videoPlayer.videoContent =  videoPlayer.moreVideos[videoHelper.position];
+                    videoPlayer.playVideoIndex = videoHelper.position;
+                    break;
+                case "mediaPause" :
+                    videoPlayer.playPause = "play-icon";
+                    break;
+                case "playNewVideo" :
+                    videoPlayer.videoContent =  videoPlayer.moreVideos[videoHelper.position];
+                    videoPlayer.playVideoIndex = videoHelper.position;
+                    break;
+                case "updateCurrentTime" :
+                    try{$scope.$apply(function(){
+                        videoPlayer.currentVideoPlayTimeText=videoHelper.currentVideoPlayTimeText;
+                        videoPlayer.currentVideoProgressPercentage={
+                            "width":videoHelper.currentVideoProgressPercentage + "%"
+                        }
+                    })}catch(e){}
+                    break;
+                case "showLoader" :
+                    if(isBuffering){
+                        if (videoPlayer.isLoading) {
+                            videoPlayer.isLoading=false;
+                        }
+                        if (videoPlayer.isError) {
+                            videoPlayer.isError=false;
+                        }
+                        if (!videoPlayer.isBuffering) {
+                            videoPlayer.isBuffering=true;
+                        }
+                        videoPlayer.bufferingPercentage=value;
+                        try{$scope.$apply()}catch(e){}
+                    }else{
+                        videoPlayer.isBuffering=false;
+                        videoPlayer.isLoading=true;
+                        videoPlayer.isError=false;
+                    }
+                    break;
+                case "hideLoader" :
+                    videoPlayer.isBuffering=false;
+                    videoPlayer.isLoading=false;
+                    videoPlayer.isError=false;
+                    break;
+                case "isreadyToPlayPause" :
+                    return !!(videoPlayer.isBuffering || videoPlayer.isLoading || videoPlayer.isError);
+                    break;
+                case "showNetworkErrorDialog" :
+                    if (!Utils.checkInitialsNetwork(popupService)) {
+                        return;
+                    }
+                    break;
+                case "showBG":
+                    videoPlayer.showBg = value;
+                    break;
+                case "hideBG":
+                    videoPlayer.showBg = value;
+                    break;
+                case "GA" :
+                    var parameter = getParameterForVideoAnalytics(videoPlayer.moreVideos[videoHelper.position]);
+                    switch(value){
+                        case "videoOpen" :
+                            Utils.callAPIGet(apiData, popupService, true, false, "updateVideoImpressions", parameter, function (response) {
+                                if(response.message.success) { }
+                            }, function (error) {
+                                Logger.showLog("error : ",error);
+                            }, VIDEO_ANALYTICS);
+                            break;
+                        case "videoStart" :
+                            Utils.callAPIGet(apiData, popupService, true, false, "updateViews", parameter, function (response) {
+                                if(response.message.success) { }
+                            }, function (error) {
+                                Logger.showLog("error : ",error);
+                            }, VIDEO_ANALYTICS);
+                            break;
+                        case "videoFinish" :
+                            parameter.totalDuration= videoHelper.currentVideoTotalTime;
+                            parameter.estimatedMinutesWatched=videoHelper.currentVideoPlayTime;
+                            break;
+                        default : break;
+                    }
+                    break;
+            };
+        };
+
+        var callbackForVC = videoPlayer.CallbackforVideoControllerHelper.bind(videoPlayer);
+        videoHelper.resgister(callbackForVC,apiData,popupService,$state);
+
+        video.nextVideo = function() {
+            console.log("hii");
+            return "hii!!!";
+        }
     }]);
+
+
+console.log(video.nextVideo());
