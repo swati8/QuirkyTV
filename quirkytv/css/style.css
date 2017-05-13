@@ -116,7 +116,7 @@ body {
     margin-bottom: 1em; }
 .container ul li {
     display: inline-block;
-    margin-right: 6.3em;
+    margin-left: 6.3em;
     margin-bottom: 1em; }
 .container ul li a {
     display: block;
@@ -138,18 +138,14 @@ body {
     display: block;
     text-align: center;
     padding: .35em; }
-.container ul li span:nth-child(3) {
-    padding-top: 0; }
-.container ul li:nth-child(3) {
-    margin-right: 0; }
+.container ul.playlist li:nth-child(3n+1) {
+    margin-left: 0; }
 .container .all-videos li {
-    margin-right: 3em; }
+    margin-left: 3em; }
 .container .all-videos li a {
     width: 11em;
     height: 8em; }
-.container .all-videos li:nth-child(3) {
-    margin-right: 3em; }
-.container .all-videos li:nth-child(4) {
-    margin-right: 0; }
+.container .all-videos li:nth-child(4n+1) {
+    margin-left: 0; }
 
 /*# sourceMappingURL=app.css.map */

@@ -52,7 +52,7 @@ angular.module('quirky')
         }
         function changeFocuse(tagWithId){
             if(tagWithId) {
-                var id = tagWithId.split('.');
+                var id = tagWithId.split(':');
                 var ele=null;
                 if(document.getElementById(id[1])){
                     ele=document.getElementById(id[1]).parentNode.children;

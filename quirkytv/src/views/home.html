@@ -1,7 +1,7 @@
 <div class="container">
     <div>
         <h3>Playlist</h3>
-        <ul>
+        <ul class="playlist">
             <li ng-repeat="item in home.playList" track by $index>
                 <a href="javascript:void(0);" ng-click="home.onPlaylistClick(item)" key-navigation tag="home" tabindex="0"
                 left="{{$index != 0 && 'prev'}}" right="next" id="playlist{{$index}}" default="{{$index==0?true:''}}"
