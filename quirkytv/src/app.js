@@ -290,7 +290,7 @@ angular.module('quirky')
                 onstreamcompleted : function() { console.log("9 onstreamcompleted");
                     nextVideo();}
 
-            }
+            };
             console.log("open url");
             webapis.avplay.open(url);
             webapis.avplay.setListener(listner);
