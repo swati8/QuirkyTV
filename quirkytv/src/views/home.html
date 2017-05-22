@@ -6,8 +6,9 @@
                 <a href="javascript:void(0);" ng-click="home.onPlaylistClick(item)" key-navigation tag="home" tabindex="0"
                 left="{{$index != 0 && 'prev'}}" right="next" id="playlist{{$index}}" default="{{$index==0?true:''}}"
                    up="{{($index - 3) >= 0 && ('home:playlist' + ($index - 3)) }}"
-                   down="{{($index + 3) < home.playList.length && ('home:playlist' + ($index + 3)) ||
-                   ('home:playlist' + (home.playList.length -1))}}">
+                   down="{{($index + 3) < home.playList.length && ('home:playlist' + ($index + 3)) || 
+                   ($index + (home.playList.length%3)) < home.playList.length &&
+                   ('home:playlist' + (home.playList.length -1)) || 'home:videolist0'}}">
                     <img src="src/images/Spotlight.png"
                         ng-src="{{item.imageURL}}"
                          onerror="this.src='src/images/Spotlight.png'">
@@ -25,6 +26,7 @@
                 left="prev" right="{{$index < home.videoList.length && 'next'}}" id="videolist{{$index}}"
                    up="{{($index - 4) >= 0 && ('home:videolist' + ($index - 4)) }}"
                    down="{{($index + 4) < home.videoList.length && ('home:videolist' + ($index + 4)) ||
+                   ($index + (home.videoList.length%4)) < home.videoList.length &&
                             ('home:videolist' + (home.videoList.length -1))}}">
                     <img src="src/images/Spotlight.png"
                          ng-src="{{videos.imageURL}}"
