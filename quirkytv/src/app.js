@@ -270,14 +270,15 @@ angular.module('quirky')
             webapis.avplay.setListener(null);
             webapis.avplay.close();
             ++index;
-            if(index == playlist.length) {
+            if(index === playlist.length) {
                 index = 0;
             }
             console.log("hii");
-            playVideo(playlist[index].url);
-        }
+            playVideo(playlist[index].videoURL);
+        };
+
         var playVideo = function (url) {
-            url = "https://dvfqe96bewx82.cloudfront.net/demo@quirkytv.net/14928262417041491488180275WhatsAppVideo20170317at6.37.39PM.mp4";
+            //url = "https://dvfqe96bewx82.cloudfront.net/demo@quirkytv.net/14928262417041491488180275WhatsAppVideo20170317at6.37.39PM.mp4";
             var listner = {
                 onbufferingstart : function() { console.log("1 onbufferingstart");},
                 onbufferingprogress : function(percent) { console.log("2 onbufferingprogress");},
